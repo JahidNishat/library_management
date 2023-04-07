@@ -10,11 +10,11 @@ func StartServer() {
 	Router := gin.Default()
 	config.Connect()
 
-	Router.GET("/book/", controller.GetBook)
+	Router.GET("/book/", controller.GetAllBooks)
 	Router.POST("/book/", controller.CreateBook)
-	// Router.Get("/book/:bookId", GetBookById)
-	// Router.Put("/book/:bookId", UpdateBookById)
-	// Router.Delete("/book/:bookId", DeleteBookById)
+	Router.GET("/book/:bookId", controller.GetBookById)
+	Router.PUT("/book/:bookId", controller.UpdateBookById)
+	Router.DELETE("/book/:bookId", controller.DeleteBookById)
 
 	Router.Run()
 }
