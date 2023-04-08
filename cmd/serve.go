@@ -6,10 +6,10 @@ import (
 )
 
 var serve = &cobra.Command{
-	Use: "serve",
+	Use:   "serve",
 	Short: "serve command",
-	Long: "This is serve command",
-	Run: Start,
+	Long:  "This is serve command",
+	Run:   Start,
 }
 
 func Start(cmd *cobra.Command, args []string) {

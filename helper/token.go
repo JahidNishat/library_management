@@ -7,24 +7,24 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type SignedDetails struct{
-	Email string
+type SignedDetails struct {
+	Email     string
 	FirstName string
-	LastName string
-	UserType string
-	UserId string
+	LastName  string
+	UserType  string
+	UserId    string
 	jwt.RegisteredClaims
 }
 
 var SecretKey = "DFB6C2407462BF22D2C659Ni23C1sh9E2C8FCatF11867A42316CBA203D54"
 
-func GenerateAllTokens(email string, firstName string, lastName string, userType string, userId string)(signedToken string, signedRefreshToken string, err error) {
+func GenerateAllTokens(email string, firstName string, lastName string, userType string, userId string) (signedToken string, signedRefreshToken string, err error) {
 	claims := &SignedDetails{
-		Email: email,
+		Email:     email,
 		FirstName: firstName,
-		LastName: lastName,
-		UserType: userType,
-		UserId: userId,
+		LastName:  lastName,
+		UserType:  userType,
+		UserId:    userId,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(60 * time.Minute)),
 		},

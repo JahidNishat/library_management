@@ -5,9 +5,9 @@ import (
 )
 
 var root = &cobra.Command{
-	Use: "root",
+	Use:   "root",
 	Short: "root command",
-	Long: "This is root command",
+	Long:  "This is root command",
 }
 
 func Execute() error {

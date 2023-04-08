@@ -12,11 +12,11 @@ import (
 
 var Db *gorm.DB
 
-func init(){
+func init() {
 	Db = config.Connect()
 }
 
-func GetAllBooks(ctx *gin.Context){
+func GetAllBooks(ctx *gin.Context) {
 	var books []models.Book
 	res := Db.Find(&books)
 	if res.Error != nil {
@@ -28,7 +28,7 @@ func GetAllBooks(ctx *gin.Context){
 	})
 }
 
-func GetBookById(ctx *gin.Context){
+func GetBookById(ctx *gin.Context) {
 	id := ctx.Param("bookId")
 	var book models.Book
 	if err := Db.Where(id).First(&book).Error; err != nil {
@@ -41,22 +41,22 @@ func GetBookById(ctx *gin.Context){
 	})
 }
 
-func CreateBook(ctx *gin.Context){
+func CreateBook(ctx *gin.Context) {
 	var book models.Book
-	if err := ctx.Bind(&book); err != nil{
+	if err := ctx.Bind(&book); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	
+
 	Db.Create(&book)
 	ctx.JSON(200, gin.H{
 		"data": book,
 	})
 }
 
-func UpdateBookById(ctx *gin.Context){
+func UpdateBookById(ctx *gin.Context) {
 	id := ctx.Param("bookId")
 	var book models.Book
 	if err := Db.Where(id).First(&book).Error; err != nil {
@@ -64,8 +64,7 @@ func UpdateBookById(ctx *gin.Context){
 		return
 	}
 
-	
-	if err := ctx.ShouldBindJSON(&book); err != nil{
+	if err := ctx.ShouldBindJSON(&book); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -73,13 +72,13 @@ func UpdateBookById(ctx *gin.Context){
 	}
 
 	Db.Updates(book)
-	
+
 	ctx.JSON(200, gin.H{
 		"data": book,
 	})
 }
 
-func DeleteBookById(ctx *gin.Context){
+func DeleteBookById(ctx *gin.Context) {
 	id := ctx.Param("bookId")
 	var book models.Book
 	if err := Db.Where(id).First(&book).Error; err != nil {

@@ -5,6 +5,7 @@ import (
 
 	"github.com/alexedwards/argon2id"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/library_management/config"
 	"github.com/library_management/helper"
 	"github.com/library_management/models"
@@ -13,7 +14,7 @@ import (
 
 var DB *gorm.DB
 
-func init(){
+func init() {
 	DB = config.Connect()
 }
 
@@ -30,7 +31,7 @@ func SignUp(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	
+
 	//Creating Token
 	token, refreshToken, err := helper.GenerateAllTokens(user.Email, user.FirstName, user.LastName, user.UserType, user.UserId)
 	if err != nil {
@@ -41,9 +42,10 @@ func SignUp(ctx *gin.Context) {
 	user.Password = hash
 	user.Token = token
 	user.RefreshToken = refreshToken
+	user.UserId = uuid.New().String()
 
 	//Save To Database
-	if err := DB.Create(&user).Error; err != nil{
+	if err := DB.Create(&user).Error; err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -54,16 +56,16 @@ func SignUp(ctx *gin.Context) {
 func LogIn(ctx *gin.Context) {
 	var (
 		input models.UserLogIn
-		user models.User
+		user  models.User
 	)
-	
+
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	//Check Email ID
-	if err := DB.Where("email = ?", input.Email).Find(&user).Error; err != nil{
+	if err := DB.Where("email = ?", input.Email).Find(&user).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Email ID"})
 		return
 	}
@@ -88,7 +90,7 @@ func LogIn(ctx *gin.Context) {
 	user.Token = token
 	user.RefreshToken = refreshToken
 
-	if err := DB.Updates(&user).Error; err != nil{
+	if err := DB.Updates(&user).Error; err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
