@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/library_management/config"
+	"github.com/library_management/helper"
 	"github.com/library_management/models"
 	"gorm.io/gorm"
 )
@@ -42,6 +43,11 @@ func GetBookById(ctx *gin.Context) {
 }
 
 func CreateBook(ctx *gin.Context) {
+	if err := helper.CheckUserType(ctx); err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
 	var book models.Book
 	if err := ctx.Bind(&book); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -57,6 +63,11 @@ func CreateBook(ctx *gin.Context) {
 }
 
 func UpdateBookById(ctx *gin.Context) {
+	if err := helper.CheckUserType(ctx); err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
 	id := ctx.Param("bookId")
 	var book models.Book
 	if err := Db.Where(id).First(&book).Error; err != nil {
@@ -79,6 +90,11 @@ func UpdateBookById(ctx *gin.Context) {
 }
 
 func DeleteBookById(ctx *gin.Context) {
+	if err := helper.CheckUserType(ctx); err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
 	id := ctx.Param("bookId")
 	var book models.Book
 	if err := Db.Where(id).First(&book).Error; err != nil {
@@ -86,7 +102,7 @@ func DeleteBookById(ctx *gin.Context) {
 		return
 	}
 
-	Db.Delete(&book)
+	Db.Unscoped().Delete(&book)
 	ctx.JSON(200, gin.H{
 		"data": book,
 	})

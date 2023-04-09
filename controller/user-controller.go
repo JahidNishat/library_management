@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/alexedwards/argon2id"
@@ -96,4 +97,39 @@ func LogIn(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"data": user})
+}
+
+func GetAllUsers(ctx *gin.Context){
+	if err := helper.CheckUserType(ctx); err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	var users []models.User
+	res := Db.Find(&users)
+	if res.Error != nil {
+		log.Fatalln("DB Retrieve Data Error")
+	}
+
+	ctx.JSON(200, gin.H{
+		"data": users,
+	})
+}
+
+func GetUserById(ctx *gin.Context){
+	uid := ctx.Param("user_id")
+	if err := helper.CheckUserId(ctx, uid); err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	var user models.User
+
+	err := DB.Where("user_id = ?", uid).First(&user).Error
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, user)
 }

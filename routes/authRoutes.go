@@ -9,9 +9,11 @@ import (
 func AuthRoutes(router *gin.Engine) {
 	router.Use(middleware.Authenticate)
 
-	router.GET("/users")
-	router.GET("/users/:user_id")
+	router.GET("/users", controller.GetAllUsers)
+	router.GET("/users/:user_id", controller.GetUserById)
 
+	router.GET("/book/", controller.GetAllBooks)
+	router.GET("/book/:bookId", controller.GetBookById)
 	router.POST("/book/", controller.CreateBook)
 	router.PUT("/book/:bookId", controller.UpdateBookById)
 	router.DELETE("/book/:bookId", controller.DeleteBookById)
