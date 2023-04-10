@@ -99,7 +99,7 @@ func LogIn(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": user})
 }
 
-func GetAllUsers(ctx *gin.Context){
+func GetAllUsers(ctx *gin.Context) {
 	if err := helper.CheckUserType(ctx); err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
@@ -116,7 +116,7 @@ func GetAllUsers(ctx *gin.Context){
 	})
 }
 
-func GetUserById(ctx *gin.Context){
+func GetUserById(ctx *gin.Context) {
 	uid := ctx.Param("user_id")
 	if err := helper.CheckUserId(ctx, uid); err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
@@ -131,5 +131,23 @@ func GetUserById(ctx *gin.Context){
 		return
 	}
 
+	ctx.JSON(http.StatusOK, user)
+}
+
+func DeleteUserById(ctx *gin.Context) {
+	if err := helper.CheckUserType(ctx); err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	uid := ctx.Param("user_id")
+	var user models.User
+
+	err := DB.Where("user_id = ?", uid).First(&user).Error
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	DB.Unscoped().Delete(user)
 	ctx.JSON(http.StatusOK, user)
 }
