@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/library_management/config"
+	"github.com/library_management/db"
 	"github.com/library_management/helper"
 	"github.com/library_management/models"
 	"gorm.io/gorm"
@@ -14,7 +14,7 @@ import (
 var Db *gorm.DB
 
 func init() {
-	Db = config.Connect()
+	Db = db.Connect()
 }
 
 func GetAllBooks(ctx *gin.Context) {

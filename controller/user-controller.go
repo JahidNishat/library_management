@@ -7,7 +7,7 @@ import (
 	"github.com/alexedwards/argon2id"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/library_management/config"
+	"github.com/library_management/db"
 	"github.com/library_management/helper"
 	"github.com/library_management/models"
 	"gorm.io/gorm"
@@ -16,7 +16,7 @@ import (
 var DB *gorm.DB
 
 func init() {
-	DB = config.Connect()
+	DB = db.Connect()
 }
 
 func SignUp(ctx *gin.Context) {
