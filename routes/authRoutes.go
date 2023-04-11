@@ -11,7 +11,7 @@ func AuthRoutes(router *gin.Engine) {
 
 	router.GET("/users", controller.GetAllUsers)
 	router.GET("/users/:user_id", controller.GetUserById)
-	router.DELETE("/users/:users_id", controller.DeleteUserById)
+	router.DELETE("/users/:user_id", controller.DeleteUserById)
 
 	router.GET("/book/", controller.GetAllBooks)
 	router.GET("/book/:bookId", controller.GetBookById)

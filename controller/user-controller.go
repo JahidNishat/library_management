@@ -148,6 +148,10 @@ func DeleteUserById(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	user.Token = ""
+	user.RefreshToken = ""
+	DB.Updates(user)
+
 	DB.Unscoped().Delete(user)
 	ctx.JSON(http.StatusOK, user)
 }
