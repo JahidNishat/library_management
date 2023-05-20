@@ -47,7 +47,7 @@ func GenerateAllTokens(email string, firstName string, lastName string, userType
 	return token, refreshToken, err
 }
 
-func Validation(clientToken string)(claims *SignedDetails, msg string) {
+func Validation(clientToken string) (claims *SignedDetails, msg string) {
 	token, err := jwt.ParseWithClaims(
 		clientToken,
 		&SignedDetails{},
@@ -61,7 +61,7 @@ func Validation(clientToken string)(claims *SignedDetails, msg string) {
 	}
 
 	claims, ok := token.Claims.(*SignedDetails)
-	if !ok{
+	if !ok {
 		msg = fmt.Sprintf("Invalid token")
 		msg = err.Error()
 		return

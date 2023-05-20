@@ -12,6 +12,8 @@ func AuthRoutes(router *gin.Engine) {
 	router.GET("/users", controller.GetAllUsers)
 	router.GET("/users/:user_id", controller.GetUserById)
 	router.DELETE("/users/:user_id", controller.DeleteUserById)
+	router.GET("/users/logout", controller.LogOut)
+	router.GET("/users/refresh", controller.RefreshToken)
 
 	router.GET("/book/", controller.GetAllBooks)
 	router.GET("/book/:bookId", controller.GetBookById)

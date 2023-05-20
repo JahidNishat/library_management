@@ -1,9 +1,9 @@
 database:
   host: localhost
   port: 5432
-  password: 12345
+  password: 1234
   user: postgres
   dbname: postgres
 
 server:
-  port: 8000
+  port: 8080

@@ -2,12 +2,14 @@ package db
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"log"
+
+	"github.com/spf13/viper"
 
 	"github.com/library_management/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"github.com/go-gormigrate/gormigrate/v2"
 )
 
 var (
@@ -49,7 +51,26 @@ func Connect() *gorm.DB {
 		log.Fatal("DB connection error", err)
 	}
 
-	Db.AutoMigrate(&models.Book{}, &models.User{})
+	//Migration
+	m := gormigrate.New(Db, gormigrate.DefaultOptions, []*gormigrate.Migration{
+		{
+			ID: "20230512000001",
+			Migrate: func(tx *gorm.DB) error {
+				// Create new table or perform any other migration operations
+				return tx.AutoMigrate(&models.Token{})
+			},
+			Rollback: func(tx *gorm.DB) error {
+				// Rollback migration (if needed)
+				return tx.Migrator().DropTable(&models.Token{})
+			},
+		},
+	})
+
+	if err := m.Migrate(); err != nil {
+		log.Fatalln(err)
+	}
+
+	// Db.AutoMigrate(&models.Book{}, &models.User{}, &models.Token{})
 
 	return Db
 }

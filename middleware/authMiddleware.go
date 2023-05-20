@@ -4,14 +4,23 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/library_management/db"
 	"github.com/library_management/helper"
+	"github.com/library_management/models"
 )
 
 func Authenticate(ctx *gin.Context) {
 	token := ctx.Request.Header.Get("token")
-	if token == ""{
+	if token == "" {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "No Token Found"})
 		ctx.Abort()
+		return
+	}
+
+	var tvalid models.Token
+	errDB := db.Db.Where("acc_token = ?",token).Find(&tvalid).Error
+	if errDB != nil{
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": errDB.Error()})
 		return
 	}
 

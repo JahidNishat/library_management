@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CheckUserType(ctx *gin.Context)(err error){
+func CheckUserType(ctx *gin.Context) (err error) {
 	userType := ctx.GetString("user_type")
 
-	if userType != "ADMIN"{
+	if userType != "ADMIN" {
 		err = errors.New("Unauthorized to access this resource")
 		return err
 	}
@@ -17,7 +17,7 @@ func CheckUserType(ctx *gin.Context)(err error){
 	return nil
 }
 
-func CheckUserId(ctx *gin.Context, uid string)(err error){
+func CheckUserId(ctx *gin.Context, uid string) (err error) {
 	userType := ctx.GetString("user_type")
 	userId := ctx.GetString("user_id")
 
